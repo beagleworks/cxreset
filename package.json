@@ -1,6 +1,6 @@
 {
   "name": "cxreset",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Display OpenAI Codex usage reset time for statusline",
   "type": "module",
   "bin": {
