@@ -2,7 +2,11 @@
 
 [English README](./README.md)
 
-OpenAI Codex の使用量リセット時間を表示する CLI ツール。statusline での表示に最適。
+OpenAI Codex の使用量リセット時間を表示する CLI ツール。statusline での表示に最適。[ccstatusline](https://github.com/sirmalloc/ccstatusline) の表示パーツとしても利用可能。
+
+![ccstatusline と併用した cxreset の表示例](./docs/assets/inaction.png)
+
+*赤丸部分が cxreset の出力。[ccstatusline](https://github.com/sirmalloc/ccstatusline) と併用した例*
 
 ## インストール
 
@@ -92,6 +96,10 @@ Codex: 5h:2h30m(5%)
   }
 }
 ```
+
+### ccstatusline と併用する場合
+
+[ccstatusline](https://github.com/sirmalloc/ccstatusline) のアドオンとして使う場合、timeout を 2000ms に設定することを推奨します。cxreset は Codex app-server と JSON-RPC で通信するため、通常の HTTP リクエストより時間がかかることがあります。
 
 ## 必要条件
 

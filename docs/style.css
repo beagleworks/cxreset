@@ -187,6 +187,27 @@ main {
   color: var(--accent);
 }
 
+/* Screenshot Section */
+.screenshot-section {
+  padding: 2rem 0 3rem;
+}
+
+.screenshot-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.screenshot {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
 /* Sections */
 .section {
   padding: 3rem 0;
