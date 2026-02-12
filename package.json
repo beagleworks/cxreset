@@ -1,0 +1,43 @@
+{
+  "name": "cxreset",
+  "version": "0.1.0",
+  "description": "Display OpenAI Codex usage reset time for statusline",
+  "type": "module",
+  "bin": {
+    "cxreset": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "npm run build",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "codex",
+    "openai-codex",
+    "cli",
+    "reset-timer",
+    "statusline",
+    "bun"
+  ],
+  "author": {
+    "name": "びーぐる@Beagle Works",
+    "url": "https://github.com/beagleworks"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beagleworks/cxreset.git"
+  },
+  "homepage": "https://github.com/beagleworks/cxreset#readme",
+  "bugs": {
+    "url": "https://github.com/beagleworks/cxreset/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
