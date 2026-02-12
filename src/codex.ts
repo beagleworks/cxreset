@@ -63,6 +63,10 @@ export function fetchCodexRateLimits(): Promise<{
       stdio: ["pipe", "pipe", "pipe"],
     });
 
+    // EPIPE 防止: 子プロセスが早期終了した場合に stdin.write() が
+    // Unhandled 'error' event を発火させるのを防ぐ
+    child.stdin.on("error", () => {});
+
     const timeoutMs = getTimeoutMs();
     const timer = setTimeout(() => {
       if (!settled) {
@@ -106,12 +110,16 @@ export function fetchCodexRateLimits(): Promise<{
 
         if (msg.id === 1) {
           // initialize レスポンス
-          if (msg.error) {
+          if (msg.error || !msg.result) {
             if (!settled) {
               settled = true;
               clearTimeout(timer);
               child.kill("SIGTERM");
-              reject(new Error(`initialize failed: ${msg.error.message}`));
+              reject(new Error(
+                msg.error
+                  ? `initialize failed: ${msg.error.message}`
+                  : "initialize response missing result",
+              ));
             }
             return;
           }
