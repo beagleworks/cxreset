@@ -4,7 +4,7 @@
 
 OpenAI Codex の使用量リセット時間を表示する CLI ツール。statusline での表示に最適。[ccstatusline](https://github.com/sirmalloc/ccstatusline) の表示パーツとしても利用可能。
 
-![ccstatusline と併用した cxreset の表示例](./docs/assets/inaction.png)
+![ccstatusline と併用した cxreset の表示例](https://raw.githubusercontent.com/beagleworks/cxreset/main/docs/assets/inaction.png)
 
 *赤丸部分が cxreset の出力。[ccstatusline](https://github.com/sirmalloc/ccstatusline) と併用した例*
 

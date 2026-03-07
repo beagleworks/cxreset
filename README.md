@@ -4,7 +4,7 @@
 
 A CLI tool to display OpenAI Codex usage reset time. Ideal for statusline display. Can also be used as a display component for [ccstatusline](https://github.com/sirmalloc/ccstatusline).
 
-![cxreset output highlighted in red — works great with ccstatusline](./docs/assets/inaction.png)
+![cxreset output highlighted in red — works great with ccstatusline](https://raw.githubusercontent.com/beagleworks/cxreset/main/docs/assets/inaction.png)
 
 *Red circle: cxreset in action. Used alongside the awesome [ccstatusline](https://github.com/sirmalloc/ccstatusline)*
 

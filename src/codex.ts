@@ -1,4 +1,7 @@
-import { spawn } from "node:child_process";
+import {
+  spawn,
+  type ChildProcessWithoutNullStreams,
+} from "node:child_process";
 import { createRequire } from "node:module";
 import type {
   JsonRpcRequest,
@@ -11,6 +14,12 @@ const EXPECTED_PRIMARY_WINDOW = 300;
 const EXPECTED_SECONDARY_WINDOW = 10080;
 const DEFAULT_TIMEOUT_MS = 2000;
 const MAX_TIMEOUT_MS = 10000;
+
+export interface FetchCodexRateLimitsOptions {
+  spawnFn?: typeof spawn;
+  timeoutMs?: number;
+  version?: string;
+}
 
 function getVersion(): string {
   const require = createRequire(import.meta.url);
@@ -51,26 +60,34 @@ function validateRateLimit(
 /**
  * Codex app-server を JSON-RPC で呼び出してレートリミットを取得
  */
-export function fetchCodexRateLimits(): Promise<{
+export function fetchCodexRateLimits(
+  options: FetchCodexRateLimitsOptions = {},
+): Promise<{
   fiveHour: CodexRateLimit;
   sevenDay: CodexRateLimit | null;
 }> {
+  const {
+    spawnFn = spawn,
+    timeoutMs = getTimeoutMs(),
+    version = getVersion(),
+  } = options;
+
   return new Promise((resolve, reject) => {
     let settled = false;
     let buffer = "";
 
-    const child = spawn("codex", ["app-server"], {
+    const child = spawnFn("codex", ["app-server"], {
       stdio: ["pipe", "pipe", "pipe"],
-    });
+    }) as ChildProcessWithoutNullStreams;
 
     // EPIPE 防止: 子プロセスが早期終了した場合に stdin.write() が
     // Unhandled 'error' event を発火させるのを防ぐ
     child.stdin.on("error", () => {});
 
-    const timeoutMs = getTimeoutMs();
     const timer = setTimeout(() => {
       if (!settled) {
         settled = true;
+        clearTimeout(timer);
         child.kill("SIGKILL");
         reject(new Error("timeout"));
       }
@@ -130,6 +147,7 @@ export function fetchCodexRateLimits(): Promise<{
             id: 2,
           };
           child.stdin.write(JSON.stringify(rateLimitsReq) + "\n");
+          continue;
         }
 
         if (msg.id === 2) {
@@ -206,7 +224,7 @@ export function fetchCodexRateLimits(): Promise<{
       method: "initialize",
       id: 1,
       params: {
-        clientInfo: { name: "cxreset", version: getVersion() },
+        clientInfo: { name: "cxreset", version },
         capabilities: {},
       },
     };

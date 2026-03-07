@@ -10,6 +10,11 @@ statusline での表示を想定。ccreset（Claude Code 版）の姉妹ツー�
 - Node.js 18+ または Bun
 - npm / pnpm / bunx いずれの実行方法でも利用可能
 
+## パッケージメタデータ
+
+- `package.json` の `engines.node` は **`>=18`** を宣言する
+- README に含まれるスクリーンショット画像は、npm package に `docs/` を含めなくても表示できる公開 URL を使う
+
 ## 出力形式
 
 ### 正常系（primary + secondary）
@@ -304,6 +309,7 @@ https://beagleworks.github.io/cxreset/
 - **テーマ切り替え**: ダーク / ライトモード
 - **コピーボタン**: インストールコマンドや設定JSONをワンクリックでコピー
 - **アクセントカラー**: ccreset（amber）とは異なる色で差別化
+- **ロゴ遷移**: project site（`/cxreset/`）上でもロゴクリックで LP 先頭へ戻れる相対リンクを使う
 
 ### デプロイ
 
@@ -327,9 +333,10 @@ https://beagleworks.github.io/cxreset/
 
 1. `npm ci`
 2. `npm run typecheck`
-3. `npm run build`
-4. タグ版数（`vX.Y.Z`）と `package.json` の `version` 一致チェック
-5. `npm publish --provenance --access public`
+3. `npm test`
+4. `npm run build`
+5. タグ版数（`vX.Y.Z`）と `package.json` の `version` 一致チェック
+6. `npm publish --provenance --access public`
 
 ### 認証・セキュリティ要件
 
@@ -340,4 +347,16 @@ https://beagleworks.github.io/cxreset/
 ### 失敗条件
 
 - タグ版数と `package.json` の `version` が不一致
+- `npm test` が失敗
 - Trusted Publisher 未設定または権限不足
+
+---
+
+## テスト
+
+- Node.js 標準テストランナー（`node --test`）を使用する
+- `npm test` は `npm run build && node --test` を実行する
+- 少なくとも以下を回帰テストでカバーする:
+  - CLI 成功時とフォールバック時の出力
+  - formatter の通常表示、`reset!` 表示、secondary なし表示
+  - `codex app-server` 通信の初期化シーケンス、secondary=`null`、タイムアウト
