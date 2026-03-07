@@ -1,8 +1,13 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import test from "node:test";
+import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
 import { run } from "../dist/index.js";
 
 const originalDateNow = Date.now;
+const execFileAsync = promisify(execFile);
+const cliPath = fileURLToPath(new URL("../dist/cli.js", import.meta.url));
 
 test.afterEach(() => {
   Date.now = originalDateNow;
@@ -69,4 +74,13 @@ test("run falls back to placeholder output when dependencies fail", async () => 
   });
 
   assert.deepEqual(logs, ["Codex: 5h:--(-%) | 7d:--(-%)"]);
+});
+
+test("cli bootstrap writes fallback output when codex is unavailable", async () => {
+  const { stdout } = await execFileAsync(process.execPath, [cliPath], {
+    cwd: process.cwd(),
+    env: { ...process.env, PATH: "" },
+  });
+
+  assert.equal(stdout.trim(), "Codex: 5h:--(-%) | 7d:--(-%)");
 });

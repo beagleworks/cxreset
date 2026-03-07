@@ -1,7 +1,3 @@
-#!/usr/bin/env node
-
-import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { fetchCodexRateLimits } from "./codex.js";
 import {
   formatResetTimes,
@@ -30,11 +26,4 @@ export async function run(options: RunOptions = {}): Promise<void> {
   } catch {
     log(formatFallbackOutput());
   }
-}
-
-const isDirectExecution = process.argv[1] !== undefined
-  && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
-
-if (isDirectExecution) {
-  void run();
 }

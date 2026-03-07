@@ -253,7 +253,7 @@ pnpm dlx cxreset
 ```bash
 npm install
 npm run build
-node dist/index.js
+node dist/cli.js
 ```
 
 ### statusline 設定
