@@ -38,6 +38,20 @@ export interface CodexRateLimitsResult {
   };
 }
 
+export interface CodexRateLimits {
+  fiveHour: CodexRateLimit;
+  sevenDay: CodexRateLimit | null;
+}
+
+export interface CachedCodexRateLimits extends CodexRateLimits {
+  fetchedAt: number;
+}
+
+export interface CodexRateLimitCache {
+  version: 1;
+  lastSuccess: CachedCodexRateLimits | null;
+}
+
 /**
  * フォーマット済みリセット情報
  */

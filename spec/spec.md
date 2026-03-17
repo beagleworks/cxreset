@@ -63,7 +63,8 @@ Codex: 5h:--(-%) | 7d:--(-%)
 
 ### 概要
 
-`codex app-server` プロセスを起動し、stdin/stdout で JSON-RPC 2.0（ヘッダー省略形式）通信を行う。
+fresh キャッシュがない場合のみ `codex app-server` プロセスを起動し、
+stdin/stdout で JSON-RPC 2.0（ヘッダー省略形式）通信を行う。
 
 ### プロトコル形式
 
@@ -179,6 +180,33 @@ cxreset                    codex app-server
 
 ---
 
+## キャッシュ仕様
+
+### 概要
+
+- 成功レスポンスは、プロセスをまたいで再利用できる永続キャッシュに保存する
+- キャッシュ対象は整形済み文字列ではなく、検証済みの `fiveHour` / `sevenDay` と取得時刻とする
+- 残り時間は表示時点の現在時刻から再計算する
+
+### 保存先
+
+- `XDG_CACHE_HOME` が設定されている場合: `$XDG_CACHE_HOME/cxreset/cache.json`
+- 未設定の場合: `~/.cache/cxreset/cache.json`
+
+### TTL
+
+- 成功レスポンスの fresh TTL は 60 秒
+- 直近の成功レスポンスは 30 分間 stale として保持してよい
+
+### 利用ルール
+
+- fresh TTL 内に有効な成功キャッシュがあれば、`codex app-server` を起動せずにその値を使う
+- fresh TTL 切れ後は `codex app-server` から再取得する
+- `codex app-server` 起動失敗、initialize 失敗、`account/rateLimits/read` 失敗、タイムアウト、応答検証失敗時は、30 分以内の stale キャッシュがあればそれを使う
+- stale キャッシュがなければ通常のフォールバック出力を返す
+
+---
+
 ## タイムアウト
 
 - デフォルト: **2000ms**（2秒）
@@ -198,22 +226,23 @@ cxreset                    codex app-server
 
 statusline 用途のため、エラー時も一貫した形式で出力する。
 これにより、UI の乱れを防ぎ、ユーザー体験を損なわない。
+直近の成功キャッシュが利用できる場合は、それを優先して表示を維持する。
 プロセスは常に exit code 0 で終了する。
 
 ### 対象エラー
 
 | エラーケース | 発生箇所 | 処理 |
 |-------------|---------|------|
-| `codex` 未インストール（ENOENT） | spawn error | フォールバック |
-| `codex` 未認証 | initialize 応答の error | フォールバック |
-| initialize 失敗（id=1 エラー応答） | stdout id=1 | フォールバック（本命リクエスト送信せず） |
-| タイムアウト（デフォルト2秒超過） | setTimeout | SIGKILL + フォールバック |
-| プロセス異常終了（非0 exit） | close イベント | settled=false の場合のみフォールバック |
+| `codex` 未インストール（ENOENT） | spawn error | stale キャッシュ優先、なければフォールバック |
+| `codex` 未認証 | initialize 応答の error | stale キャッシュ優先、なければフォールバック |
+| initialize 失敗（id=1 エラー応答） | stdout id=1 | stale キャッシュ優先、なければフォールバック（本命リクエスト送信せず） |
+| タイムアウト（デフォルト2秒超過） | setTimeout | SIGKILL + stale キャッシュ優先、なければフォールバック |
+| プロセス異常終了（非0 exit） | close イベント | settled=false の場合のみ stale キャッシュ優先、なければフォールバック |
 | JSON パースエラー | stdout 行処理 | 該当行スキップ（最終的にタイムアウト） |
-| `rateLimits` / `primary` 欠落 | 応答検証 | フォールバック |
+| `rateLimits` / `primary` 欠落 | 応答検証 | stale キャッシュ優先、なければフォールバック |
 | `secondary` が null | 応答検証 | 5h のみ表示（エラーではない） |
-| `windowDurationMins` 範囲外 | 応答検証 | フォールバック |
-| `resetsAt` が null / 0 / 負値 | 応答検証 | フォールバック |
+| `windowDurationMins` 範囲外 | 応答検証 | stale キャッシュ優先、なければフォールバック |
+| `resetsAt` が null / 0 / 負値 | 応答検証 | stale キャッシュ優先、なければフォールバック |
 
 ### 子プロセスの終了処理（settled フラグ）
 
@@ -360,3 +389,13 @@ https://beagleworks.github.io/cxreset/
   - CLI 成功時とフォールバック時の出力
   - formatter の通常表示、`reset!` 表示、secondary なし表示
   - `codex app-server` 通信の初期化シーケンス、secondary=`null`、タイムアウト
+  - fresh キャッシュ利用時に `codex app-server` を起動しないこと
+  - タイムアウトや取得失敗時に stale キャッシュへフォールバックすること
+
+---
+
+## タスク
+
+- T1: 永続キャッシュの型・保存先・TTL 判定ロジックを実装する ✅
+- T2: `run()` に fresh キャッシュ優先と stale キャッシュフォールバックを組み込む ✅
+- T3: キャッシュ命中と stale フォールバックの回帰テストを追加する ✅
