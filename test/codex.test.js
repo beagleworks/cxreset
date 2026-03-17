@@ -158,6 +158,60 @@ test("fetchCodexRateLimits accepts missing secondary window", async () => {
   assert.equal(actual.sevenDay, null);
 });
 
+test("fetchCodexRateLimits parses the final response line without a trailing newline", async () => {
+  const { child, spawnFn } = createSpawnMock(({ child: spawnedChild, request }) => {
+    if (request.id === 1) {
+      spawnedChild.stdout.write(
+        `${JSON.stringify({ id: 1, result: { userAgent: "cxreset/test" } })}\n`,
+      );
+      return;
+    }
+
+    if (request.id === 2) {
+      spawnedChild.stdout.end(
+        JSON.stringify({
+          id: 2,
+          result: {
+            rateLimits: {
+              primary: {
+                usedPercent: 12,
+                windowDurationMins: 300,
+                resetsAt: 1770859735,
+              },
+              secondary: {
+                usedPercent: 10,
+                windowDurationMins: 10080,
+                resetsAt: 1771311795,
+              },
+            },
+          },
+        }),
+      );
+      spawnedChild.emit("close", 0);
+    }
+  });
+
+  const actual = await fetchCodexRateLimits({
+    spawnFn,
+    timeoutMs: 100,
+    version: "9.9.9",
+  });
+
+  assert.deepEqual(actual, {
+    fiveHour: {
+      usedPercent: 12,
+      windowDurationMins: 300,
+      resetsAt: 1770859735,
+    },
+    sevenDay: {
+      usedPercent: 10,
+      windowDurationMins: 10080,
+      resetsAt: 1771311795,
+    },
+  });
+  assert.equal(child.killedSignals.at(-1), "SIGTERM");
+});
+
 test("fetchCodexRateLimits rejects initialize errors", async () => {
   const { child, spawnFn } = createSpawnMock(({ child: spawnedChild, request }) => {
     if (request.id === 1) {
