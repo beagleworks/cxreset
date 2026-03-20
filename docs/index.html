@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cxreset - OpenAI Codex Usage Reset Timer</title>
-  <meta name="description" content="Display OpenAI Codex usage reset time in your statusline">
+  <title>cxreset - Unofficial Codex CLI Usage Reset Timer</title>
+  <meta name="description" content="Unofficial CLI tool to display Codex CLI usage reset time in your statusline">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,8 +40,12 @@
   <main>
     <!-- Hero Section -->
     <section class="hero">
-      <h1 class="hero-title" data-i18n="hero.title">Display OpenAI Codex usage reset time</h1>
-      <p class="hero-subtitle" data-i18n="hero.subtitle">A CLI tool that shows when your Codex usage limits will reset. Perfect for statusline integration.</p>
+      <h1 class="hero-title" data-i18n="hero.title">Display Codex CLI usage reset time</h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">An unofficial CLI tool that shows when your Codex CLI usage limits will reset. Perfect for statusline integration.</p>
+
+      <div class="disclaimer-box">
+        <p class="disclaimer-text" data-i18n="hero.disclaimer">Unofficial project. Not affiliated with, endorsed by, or supported by OpenAI. Compatibility depends on the locally installed Codex CLI and may change as the experimental app-server evolves.</p>
+      </div>
 
       <div class="install-box">
         <code class="install-command">bunx cxreset</code>
@@ -266,8 +270,9 @@
     // Translation data
     const translations = {
       en: {
-        'hero.title': 'Display OpenAI Codex usage reset time',
-        'hero.subtitle': 'A CLI tool that shows when your Codex usage limits will reset. Perfect for statusline integration.',
+        'hero.title': 'Display Codex CLI usage reset time',
+        'hero.subtitle': 'An unofficial CLI tool that shows when your Codex CLI usage limits will reset. Perfect for statusline integration.',
+        'hero.disclaimer': 'Unofficial project. Not affiliated with, endorsed by, or supported by OpenAI. Compatibility depends on the locally installed Codex CLI and may change as the experimental app-server evolves.',
         'features.title': 'Output Format',
         'features.table.item': 'Item',
         'features.table.description': 'Description',
@@ -291,8 +296,9 @@
         'requirements.codex': '<a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI</a> installed and authenticated'
       },
       ja: {
-        'hero.title': 'OpenAI Codex の使用量リセット時間を表示',
-        'hero.subtitle': 'Codex の使用量制限がリセットされるまでの時間を表示するCLIツール。statusline での表示に最適。',
+        'hero.title': 'Codex CLI の使用量リセット時間を表示',
+        'hero.subtitle': 'Codex CLI の使用量制限がリセットされるまでの時間を表示する非公式 CLI ツール。statusline での表示に最適。',
+        'hero.disclaimer': '非公式プロジェクトです。OpenAI の提携、承認、サポートは受けていません。互換性はローカルにインストールされた Codex CLI に依存し、experimental な app-server の変更で崩れる可能性があります。',
         'features.title': '出力形式',
         'features.table.item': '項目',
         'features.table.description': '説明',

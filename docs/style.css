@@ -170,6 +170,21 @@ main {
   margin-right: auto;
 }
 
+.disclaimer-box {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  padding: 0.9rem 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.disclaimer-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
 .install-box {
   display: inline-flex;
   align-items: center;

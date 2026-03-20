@@ -2,7 +2,9 @@
 
 [English README](./README.md)
 
-OpenAI Codex の使用量リセット時間を表示する CLI ツール。statusline での表示に最適。[ccstatusline](https://github.com/sirmalloc/ccstatusline) の表示パーツとしても利用可能。
+Codex CLI の使用量リセット時間を表示する非公式 CLI ツール。statusline での表示に最適。[ccstatusline](https://github.com/sirmalloc/ccstatusline) の表示パーツとしても利用可能。
+
+> 非公式プロジェクトです。OpenAI の提携、承認、サポートは受けていません。
 
 ![ccstatusline と併用した cxreset の表示例](https://raw.githubusercontent.com/beagleworks/cxreset/main/docs/assets/inaction.png)
 
@@ -108,27 +110,17 @@ Codex: 5h:2h30m(5%)
 
 ## 仕組み
 
-Codex CLI の app-server を起動し、JSON-RPC で通信して使用量情報を取得します。
+ローカルにインストールされた Codex CLI の app-server を起動し、JSON-RPC で通信して使用量情報を取得します。
 
-## npm 自動公開（GitHub Actions）
+## 互換性に関する注意
 
-このリポジトリには、`v1.2.3` のようなタグを push すると npm に自動公開する CI（`.github/workflows/npm-publish.yml`）が含まれます。
+- cxreset は、インストール済みの Codex CLI が公開している app-server インターフェースに依存します
+- `codex app-server` は、Codex CLI の help 上では現時点で experimental 扱いです
+- 将来の Codex CLI 更新により、プロトコルやレスポンス形式が変わって互換性が崩れる可能性があります
 
-事前設定:
+## リリース
 
-1. npm のパッケージ設定で Trusted Publisher を追加する
-2. Provider に `GitHub Actions` を選び、このリポジトリと workflow（`.github/workflows/npm-publish.yml`）を紐づける
-3. GitHub 側の `NPM_TOKEN` シークレットは不要（使いません）
-
-公開手順:
-
-```bash
-# 例: 0.1.0 を公開する場合
-npm version 0.1.0
-git push origin main --follow-tags
-```
-
-タグ（`v0.1.0`）と `package.json` の `version` が一致しない場合、CI は失敗して公開しません。
+リリース手順は [RELEASING.ja.md](./RELEASING.ja.md) に移動しました。
 
 ## ライセンス
 

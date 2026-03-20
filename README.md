@@ -2,7 +2,9 @@
 
 [日本語版 README](./README.ja.md)
 
-A CLI tool to display OpenAI Codex usage reset time. Ideal for statusline display. Can also be used as a display component for [ccstatusline](https://github.com/sirmalloc/ccstatusline).
+An unofficial CLI tool to display Codex CLI usage reset time. Ideal for statusline display. Can also be used as a display component for [ccstatusline](https://github.com/sirmalloc/ccstatusline).
+
+> Unofficial project. Not affiliated with, endorsed by, or supported by OpenAI.
 
 ![cxreset output highlighted in red — works great with ccstatusline](https://raw.githubusercontent.com/beagleworks/cxreset/main/docs/assets/inaction.png)
 
@@ -108,27 +110,17 @@ When using cxreset as a [ccstatusline](https://github.com/sirmalloc/ccstatusline
 
 ## How it works
 
-Launches the Codex CLI's app-server and communicates via JSON-RPC to fetch usage information.
+Launches the locally installed Codex CLI's app-server and communicates via JSON-RPC to fetch usage information.
 
-## npm Auto Publish (GitHub Actions)
+## Compatibility Notes
 
-This repo includes CI (`.github/workflows/npm-publish.yml`) that automatically publishes to npm when you push a tag like `v1.2.3`.
+- cxreset depends on the app-server interface exposed by your installed Codex CLI
+- `codex app-server` is currently marked experimental in Codex CLI help output
+- Future Codex CLI updates may change the protocol or response fields and break compatibility
 
-Prerequisites:
+## Releasing
 
-1. Add a Trusted Publisher in your npm package settings
-2. Select `GitHub Actions` as the provider and bind this repository and workflow (`.github/workflows/npm-publish.yml`)
-3. No `NPM_TOKEN` GitHub secret is required
-
-Release flow:
-
-```bash
-# Example: release 0.1.0
-npm version 0.1.0
-git push origin main --follow-tags
-```
-
-If the Git tag (for example `v0.1.0`) and `package.json` version do not match, the workflow fails and does not publish.
+Release instructions have been moved to [RELEASING.md](./RELEASING.md).
 
 ## License
 

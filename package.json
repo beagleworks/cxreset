@@ -1,7 +1,7 @@
 {
   "name": "cxreset",
-  "version": "0.2.0",
-  "description": "Display OpenAI Codex usage reset time for statusline",
+  "version": "0.2.1",
+  "description": "Unofficial CLI to display Codex CLI usage reset time for statusline",
   "type": "module",
   "bin": {
     "cxreset": "dist/cli.js"
@@ -18,7 +18,6 @@
   },
   "keywords": [
     "codex",
-    "openai-codex",
     "cli",
     "reset-timer",
     "statusline",
